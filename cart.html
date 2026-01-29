@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>سلة التسوق - رواياتي</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <h1>رواياتي</h1>
+    <nav>
+      <a href="index.html">الرئيسية</a>
+      <a href="cart.html">السلة (<span id="cart-count">0</span>)</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>سلة التسوق</h2>
+
+    <div id="cart-items"></div>
+
+    <div style="margin: 2rem 0; text-align: left;">
+      <h3>الإجمالي: <span id="total">0</span> ج.م</h3>
+      <a href="checkout.html" class="btn" style="font-size:1.2rem; padding:1rem 2rem;">إتمام الشراء</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 رواياتي - جميع الحقوق محفوظة</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // كود خاص بصفحة السلة
+    function displayCart() {
+      const container = document.getElementById('cart-items');
+      const totalEl = document.getElementById('total');
+      if (!container) return;
+
+      if (cart.length === 0) {
+        container.innerHTML = '<p style="text-align:center; font-size:1.3rem;">السلة فارغة حاليًا</p>';
+        totalEl.textContent = '0';
+        return;
+      }
+
+      container.innerHTML = '';
+      let total = 0;
+
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.style.display = 'flex';
+        div.style.alignItems = 'center';
+        div.style.gap = '1.5rem';
+        div.innerHTML = `
+          <img src="${item.cover}" alt="${item.title}" style="width:120px; height:160px; object-fit:cover; border-radius:8px;">
+          <div style="flex:1;">
+            <h3>${item.title}</h3>
+            <p>${item.price} ج.م</p>
+          </div>
+          <button class="btn btn-remove" onclick="removeFromCart(${item.id})">حذف</button>
+        `;
+        container.appendChild(div);
+      });
+
+      totalEl.textContent = total;
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(item => item.id !== id);
+      saveCart();
+      displayCart();
+      updateCartCount();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      displayCart();
+      updateCartCount();
+    });
+  </script>
+</body>
+</html>
